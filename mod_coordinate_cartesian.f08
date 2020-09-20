@@ -30,6 +30,11 @@ module mod_coordinate_cartesian
     private :: add_3D_R32
     private :: add_3D_R64
 
+    private :: dot_product_2D_R32
+    private :: dot_product_2D_R64
+    private :: dot_product_3D_R32
+    private :: dot_product_3D_R64
+
     private :: norm2_2D_R32
     private :: norm2_2D_R64
     private :: norm2_3D_R32
@@ -40,6 +45,15 @@ module mod_coordinate_cartesian
     private :: minus_3D_R32
     private :: minus_3D_R64
 
+    private :: prod_2D_sclr_R32
+    private :: prod_2D_sclr_R64
+    private :: prod_3D_sclr_R32
+    private :: prod_3D_sclr_R64
+    private :: prod_sclr_2D_R32
+    private :: prod_sclr_2D_R64
+    private :: prod_sclr_3D_R32
+    private :: prod_sclr_3D_R64
+
     private :: sub_2D_R32
     private :: sub_2D_R64
     private :: sub_3D_R32
@@ -48,9 +62,11 @@ module mod_coordinate_cartesian
     ! kind: interface: operator
     public :: operator(+)
     public :: operator(-)
+    public :: operator(*)
 
     ! kind: interface: function
     public :: norm2
+    public :: dot_product
 
 
 
@@ -107,6 +123,24 @@ module mod_coordinate_cartesian
         module procedure :: sub_3D_R64
 
     end interface operator(-)
+
+    interface operator(*)
+        module procedure :: prod_2D_sclr_R32
+        module procedure :: prod_2D_sclr_R64
+        module procedure :: prod_3D_sclr_R32
+        module procedure :: prod_3D_sclr_R64
+        module procedure :: prod_sclr_2D_R32
+        module procedure :: prod_sclr_2D_R64
+        module procedure :: prod_sclr_3D_R32
+        module procedure :: prod_sclr_3D_R64
+    end interface operator(*)
+
+    interface dot_product
+        module procedure :: dot_product_2D_R32
+        module procedure :: dot_product_2D_R64
+        module procedure :: dot_product_3D_R32
+        module procedure :: dot_product_3D_R64
+    end interface dot_product
 
     interface norm2
         module procedure :: norm2_2D_R32
@@ -181,6 +215,62 @@ module mod_coordinate_cartesian
         coordinate_add%z = coordinate_a%z + coordinate_b%z
 
     end function add_3D_R64
+
+
+
+    pure function dot_product_2D_R32 (coordinate_a, coordinate_b) result(product)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate_a, coordinate_b
+
+        ! return value of this <function>
+        real(REAL32) :: product
+
+        product = coordinate_a%x * coordinate_b%x + coordinate_a%y * coordinate_b%y
+
+    end function dot_product_2D_R32
+
+
+
+    pure function dot_product_2D_R64 (coordinate_a, coordinate_b) result(product)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate_a, coordinate_b
+
+        ! return value of this <function>
+        real(REAL64) :: product
+
+        product = coordinate_a%x * coordinate_b%x + coordinate_a%y * coordinate_b%y
+
+    end function dot_product_2D_R64
+
+
+
+    pure function dot_product_3D_R32 (coordinate_a, coordinate_b) result(product)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_3D_R32), intent(in) :: coordinate_a, coordinate_b
+
+        ! return value of this <function>
+        real(REAL32) :: product
+
+        product = coordinate_a%x * coordinate_b%x + coordinate_a%y * coordinate_b%y + coordinate_a%z * coordinate_b%z
+
+    end function dot_product_3D_R32
+
+
+
+    pure function dot_product_3D_R64 (coordinate_a, coordinate_b) result(product)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_3D_R64), intent(in) :: coordinate_a, coordinate_b
+
+        ! return value of this <function>
+        real(REAL64) :: product
+
+        product = coordinate_a%x * coordinate_b%x + coordinate_a%y * coordinate_b%y + coordinate_a%z * coordinate_b%z
+
+    end function dot_product_3D_R64
 
 
 
@@ -299,6 +389,138 @@ module mod_coordinate_cartesian
         norm2 = coordinate%x * coordinate%x + coordinate%y * coordinate%y + coordinate%z * coordinate%z
 
     end function norm2_3D_R64
+
+
+
+    pure function prod_2D_sclr_R32 (coordinate_left, scalar_right) result(coordinate_prod)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate_left
+        real(REAL32),                          intent(in) :: scalar_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_2D_R32) :: coordinate_prod
+
+        coordinate_prod%x = coordinate_left%x * scalar_right
+        coordinate_prod%y = coordinate_left%y * scalar_right
+
+    end function prod_2D_sclr_R32
+
+
+
+    pure function prod_2D_sclr_R64 (coordinate_left, scalar_right) result(coordinate_prod)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate_left
+        real(REAL64),                          intent(in) :: scalar_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_2D_R64) :: coordinate_prod
+
+        coordinate_prod%x = coordinate_left%x * scalar_right
+        coordinate_prod%y = coordinate_left%y * scalar_right
+
+    end function prod_2D_sclr_R64
+
+
+
+    pure function prod_3D_sclr_R32 (coordinate_left, scalar_right) result(coordinate_prod)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_3D_R32), intent(in) :: coordinate_left
+        real(REAL32),                          intent(in) :: scalar_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_3D_R32) :: coordinate_prod
+
+        coordinate_prod%x = coordinate_left%x * scalar_right
+        coordinate_prod%y = coordinate_left%y * scalar_right
+        coordinate_prod%z = coordinate_left%z * scalar_right
+
+    end function prod_3D_sclr_R32
+
+
+
+    pure function prod_3D_sclr_R64 (coordinate_left, scalar_right) result(coordinate_prod)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_3D_R64), intent(in) :: coordinate_left
+        real(REAL64),                          intent(in) :: scalar_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_3D_R64) :: coordinate_prod
+
+        coordinate_prod%x = coordinate_left%x * scalar_right
+        coordinate_prod%y = coordinate_left%y * scalar_right
+        coordinate_prod%z = coordinate_left%z * scalar_right
+
+    end function prod_3D_sclr_R64
+
+
+
+    pure function prod_sclr_2D_R32 (scalar_left, coordinate_right) result(coordinate_prod)
+
+        ! arguments for this <function>
+        real(REAL32),                          intent(in) :: scalar_left
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_2D_R32) :: coordinate_prod
+
+        coordinate_prod%x = scalar_left * coordinate_right%x
+        coordinate_prod%y = scalar_left * coordinate_right%y
+
+    end function prod_sclr_2D_R32
+
+
+
+    pure function prod_sclr_2D_R64 (scalar_left, coordinate_right) result(coordinate_prod)
+
+        ! arguments for this <function>
+        real(REAL64),                          intent(in) :: scalar_left
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_2D_R64) :: coordinate_prod
+
+        coordinate_prod%x = scalar_left * coordinate_right%x
+        coordinate_prod%y = scalar_left * coordinate_right%y
+
+    end function prod_sclr_2D_R64
+
+
+
+    pure function prod_sclr_3D_R32 (scalar_left, coordinate_right) result(coordinate_prod)
+
+        ! arguments for this <function>
+        real(REAL32),                          intent(in) :: scalar_left
+        type(typ_coordinate_cartesian_3D_R32), intent(in) :: coordinate_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_3D_R32) :: coordinate_prod
+
+        coordinate_prod%x = scalar_left * coordinate_right%x
+        coordinate_prod%y = scalar_left * coordinate_right%y
+        coordinate_prod%z = scalar_left * coordinate_right%z
+
+    end function prod_sclr_3D_R32
+
+
+
+    pure function prod_sclr_3D_R64 (scalar_left, coordinate_right) result(coordinate_prod)
+
+        ! arguments for this <function>
+        real(REAL64),                          intent(in) :: scalar_left
+        type(typ_coordinate_cartesian_3D_R64), intent(in) :: coordinate_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_3D_R64) :: coordinate_prod
+
+        coordinate_prod%x = scalar_left * coordinate_right%x
+        coordinate_prod%y = scalar_left * coordinate_right%y
+        coordinate_prod%z = scalar_left * coordinate_right%z
+
+    end function prod_sclr_3D_R64
 
 
 
