@@ -30,6 +30,9 @@ module mod_interval1D
     private :: delta_R32
     private :: delta_R64
 
+    private :: inequality_R32
+    private :: inequality_R64
+
     private :: midpoint_R32
     private :: midpoint_R64
 
@@ -38,6 +41,7 @@ module mod_interval1D
 
     ! kind: interface
     public :: delta
+    public :: inequality
     public :: midpoint
     public :: width
 
@@ -62,6 +66,11 @@ module mod_interval1D
         module procedure :: delta_R32
         module procedure :: delta_R64
     end interface delta
+
+    interface inequality
+        module procedure :: inequality_R32
+        module procedure :: inequality_R64
+    end interface inequality
 
     interface midpoint
         module procedure :: midpoint_R32
@@ -105,6 +114,34 @@ module mod_interval1D
         delta = interval%upper - interval%lower
 
     end function delta_R64
+
+
+
+    pure function inequality_R32 (interval) result(stat)
+
+        ! arguments for this <function>
+        type(typ_interval1d_R32), intent(in) :: interval
+
+        ! return value of this <function>
+        logical :: stat
+
+        stat = interval%lower < interval%upper
+
+    end function inequality_R32
+
+
+
+    pure function inequality_R64 (interval) result(stat)
+
+        ! arguments for this <function>
+        type(typ_interval1d_R64), intent(in) :: interval
+
+        ! return value of this <function>
+        logical :: stat
+
+        stat = interval%lower < interval%upper
+
+    end function inequality_R64
 
 
 
