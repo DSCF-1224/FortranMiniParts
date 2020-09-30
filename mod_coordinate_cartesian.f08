@@ -35,10 +35,11 @@ module mod_coordinate_cartesian
     private :: dot_product_3D_R32
     private :: dot_product_3D_R64
 
-    private :: norm2_2D_R32
-    private :: norm2_2D_R64
-    private :: norm2_3D_R32
-    private :: norm2_3D_R64
+    private :: norm_R32
+    private :: norm_R64
+
+    private :: norm2_R32
+    private :: norm2_R64
 
     private :: minus_2D_R32
     private :: minus_2D_R64
@@ -82,15 +83,11 @@ module mod_coordinate_cartesian
         real(REAL64), public :: y
     end type typ_coordinate_cartesian_2D_R64
 
-    type typ_coordinate_cartesian_3D_R32
-        real(REAL32), public :: x
-        real(REAL32), public :: y
+    type, extends(typ_coordinate_cartesian_2D_R32) :: typ_coordinate_cartesian_3D_R32
         real(REAL32), public :: z
     end type typ_coordinate_cartesian_3D_R32
 
-    type typ_coordinate_cartesian_3D_R64
-        real(REAL64), public :: x
-        real(REAL64), public :: y
+    type, extends(typ_coordinate_cartesian_2D_R64) :: typ_coordinate_cartesian_3D_R64
         real(REAL64), public :: z
     end type typ_coordinate_cartesian_3D_R64
 
@@ -116,7 +113,7 @@ module mod_coordinate_cartesian
         module procedure :: minus_3D_R32
         module procedure :: minus_3D_R64
 
-        ! binary operator
+        ! Binary operator
         module procedure :: sub_2D_R32
         module procedure :: sub_2D_R64
         module procedure :: sub_3D_R32
@@ -142,11 +139,14 @@ module mod_coordinate_cartesian
         module procedure :: dot_product_3D_R64
     end interface dot_product
 
+    interface norm
+        module procedure :: norm_R32
+        module procedure :: norm_R64
+    end interface norm
+
     interface norm2
-        module procedure :: norm2_2D_R32
-        module procedure :: norm2_2D_R64
-        module procedure :: norm2_3D_R32
-        module procedure :: norm2_3D_R64
+        module procedure :: norm2_R32
+        module procedure :: norm2_R64
     end interface norm2
 
 
@@ -274,20 +274,6 @@ module mod_coordinate_cartesian
 
 
 
-    pure function norm2_2D_R32 (coordinate) result(norm2)
-
-        ! arguments for this <function>
-        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
-
-        ! return value of this <function>
-        real(REAL32) :: norm2
-
-        norm2 = coordinate%x * coordinate%x + coordinate%y * coordinate%y
-
-    end function norm2_2D_R32
-
-
-
     pure function minus_2D_R32 (coordinate) result(coordinate_minus)
 
         ! arguments for this <function>
@@ -350,45 +336,59 @@ module mod_coordinate_cartesian
 
 
 
-    pure function norm2_2D_R64 (coordinate) result(norm2)
+    pure function norm_R32 (coordinate) result(norm)
 
         ! arguments for this <function>
-        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+        class(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
 
         ! return value of this <function>
-        real(REAL64) :: norm2
+        real(REAL32) :: norm
 
-        norm2 = coordinate%x * coordinate%x + coordinate%y * coordinate%y
+        norm = sqrt( norm2(coordinate) )
 
-    end function norm2_2D_R64
+    end function norm_R32
 
 
 
-    pure function norm2_3D_R32 (coordinate) result(norm2)
+    pure function norm_R64 (coordinate) result(norm)
 
         ! arguments for this <function>
-        type(typ_coordinate_cartesian_3D_R32), intent(in) :: coordinate
+        class(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL64) :: norm
+
+        norm = sqrt( norm2(coordinate) )
+
+    end function norm_R64
+
+
+
+    pure function norm2_R32 (coordinate) result(norm2)
+
+        ! arguments for this <function>
+        class(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
 
         ! return value of this <function>
         real(REAL32) :: norm2
 
-        norm2 = coordinate%x * coordinate%x + coordinate%y * coordinate%y + coordinate%z * coordinate%z
+        norm2 = dot_product(coordinate, coordinate)
 
-    end function norm2_3D_R32
+    end function norm2_R32
 
 
 
-    pure function norm2_3D_R64 (coordinate) result(norm2)
+    pure function norm2_R64 (coordinate) result(norm2)
 
         ! arguments for this <function>
-        type(typ_coordinate_cartesian_3D_R64), intent(in) :: coordinate
+        class(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
 
         ! return value of this <function>
         real(REAL64) :: norm2
 
-        norm2 = coordinate%x * coordinate%x + coordinate%y * coordinate%y + coordinate%z * coordinate%z
+        norm2 = dot_product(coordinate, coordinate)
 
-    end function norm2_3D_R64
+    end function norm2_R64
 
 
 
