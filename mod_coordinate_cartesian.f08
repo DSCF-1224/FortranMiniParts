@@ -16,6 +16,7 @@ module mod_coordinate_cartesian
     implicit none
 
 
+
     ! accessibility of the <subroutine>s and <function>s in this <module>
 
     ! kind: type
@@ -29,6 +30,12 @@ module mod_coordinate_cartesian
     private :: add_2D_R64
     private :: add_3D_R32
     private :: add_3D_R64
+
+    private :: cos_with_norm_2D_R32
+    private :: cos_with_norm_2D_R64
+
+    private :: cos_without_norm_2D_R32
+    private :: cos_without_norm_2D_R64
 
     private :: dot_product_2D_R32
     private :: dot_product_2D_R64
@@ -55,10 +62,19 @@ module mod_coordinate_cartesian
     private :: prod_sclr_3D_R32
     private :: prod_sclr_3D_R64
 
+    private :: sin_with_norm_2D_R32
+    private :: sin_with_norm_2D_R64
+
+    private :: sin_without_norm_2D_R32
+    private :: sin_without_norm_2D_R64
+
     private :: sub_2D_R32
     private :: sub_2D_R64
     private :: sub_3D_R32
     private :: sub_3D_R64
+
+    private :: tan_2D_R32
+    private :: tan_2D_R64
 
     ! kind: interface: operator
     public :: operator(+)
@@ -66,8 +82,14 @@ module mod_coordinate_cartesian
     public :: operator(*)
 
     ! kind: interface: function
+    public :: cos
+    public :: cos_with_norm
+    public :: norm
     public :: norm2
     public :: dot_product
+    public :: sin
+    public :: sin_with_norm
+    public :: tan
 
 
 
@@ -132,6 +154,16 @@ module mod_coordinate_cartesian
         module procedure :: prod_sclr_3D_R64
     end interface operator(*)
 
+    interface cos
+        module procedure :: cos_without_norm_2D_R32
+        module procedure :: cos_without_norm_2D_R64
+    end interface cos
+
+    interface cos_with_norm
+        module procedure :: cos_with_norm_2D_R32
+        module procedure :: cos_with_norm_2D_R64
+    end interface cos_with_norm
+
     interface dot_product
         module procedure :: dot_product_2D_R32
         module procedure :: dot_product_2D_R64
@@ -148,6 +180,21 @@ module mod_coordinate_cartesian
         module procedure :: norm2_R32
         module procedure :: norm2_R64
     end interface norm2
+
+    interface sin
+        module procedure :: sin_without_norm_2D_R32
+        module procedure :: sin_without_norm_2D_R64
+    end interface sin
+
+    interface sin_with_norm
+        module procedure :: sin_with_norm_2D_R32
+        module procedure :: sin_with_norm_2D_R64
+    end interface sin_with_norm
+
+    interface tan
+        module procedure :: tan_2D_R32
+        module procedure :: tan_2D_R64
+    end interface tan
 
 
 
@@ -215,6 +262,64 @@ module mod_coordinate_cartesian
         coordinate_add%z = coordinate_a%z + coordinate_b%z
 
     end function add_3D_R64
+
+
+
+    pure function cos_with_norm_2D_R32 (coordinate, norm) result(cos)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
+        real(REAL32),                          intent(in) :: norm
+
+        ! return value of this <function>
+        real(REAL32) :: cos
+
+        cos = coordinate%x / norm
+
+    end function cos_with_norm_2D_R32
+
+
+
+    pure function cos_with_norm_2D_R64 (coordinate, norm) result(cos)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+        real(REAL64),                          intent(in) :: norm
+
+        ! return value of this <function>
+        real(REAL64) :: cos
+
+        cos = coordinate%x / norm
+
+    end function cos_with_norm_2D_R64
+
+
+
+    pure function cos_without_norm_2D_R32 (coordinate) result(cos)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL32) :: cos
+
+        cos = cos_with_norm( coordinate= coordinate, norm= norm(coordinate) )
+
+    end function cos_without_norm_2D_R32
+
+
+
+    pure function cos_without_norm_2D_R64 (coordinate) result(cos)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL64) :: cos
+
+        cos = cos_with_norm( coordinate= coordinate, norm= norm(coordinate) )
+
+    end function cos_without_norm_2D_R64
 
 
 
@@ -524,6 +629,64 @@ module mod_coordinate_cartesian
 
 
 
+    pure function sin_with_norm_2D_R32 (coordinate, norm) result(sin)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
+        real(REAL32),                          intent(in) :: norm
+
+        ! return value of this <function>
+        real(REAL32) :: sin
+
+        sin = coordinate%y / norm
+
+    end function sin_with_norm_2D_R32
+
+
+
+    pure function sin_with_norm_2D_R64 (coordinate, norm) result(sin)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+        real(REAL64),                          intent(in) :: norm
+
+        ! return value of this <function>
+        real(REAL64) :: sin
+
+        sin = coordinate%y / norm
+
+    end function sin_with_norm_2D_R64
+
+
+
+    pure function sin_without_norm_2D_R32 (coordinate) result(sin)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL32) :: sin
+
+        sin = sin_with_norm( coordinate= coordinate, norm= norm(coordinate) )
+
+    end function sin_without_norm_2D_R32
+
+
+
+    pure function sin_without_norm_2D_R64 (coordinate) result(sin)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL64) :: sin
+
+        sin = sin_with_norm( coordinate= coordinate, norm= norm(coordinate) )
+
+    end function sin_without_norm_2D_R64
+
+
+
     pure function sub_2D_R32 (coordinate_a, coordinate_b) result(coordinate_sub)
 
         ! arguments for this <function>
@@ -578,6 +741,33 @@ module mod_coordinate_cartesian
 
     end function sub_3D_R64
 
+
+
+    pure function tan_2D_R32 (coordinate) result(tan)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL32) :: tan
+
+        tan = coordinate%y / coordinate%x
+
+    end function tan_2D_R32
+
+
+
+    pure function tan_2D_R64 (coordinate) result(tan)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL64) :: tan
+
+        tan = coordinate%y / coordinate%x
+
+    end function tan_2D_R64
 
 end module mod_coordinate_cartesian
 
