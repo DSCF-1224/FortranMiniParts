@@ -73,6 +73,9 @@ module mod_coordinate_cartesian
     private :: prod_sclr_3D_R32
     private :: prod_sclr_3D_R64
 
+    private :: rank_R32
+    private :: rank_R64
+
     private :: sin_with_norm_2D_R32
     private :: sin_with_norm_2D_R64
 
@@ -102,10 +105,11 @@ module mod_coordinate_cartesian
     ! kind: interface: function
     public :: cos
     public :: cos_with_norm
+    public :: dot_product
     public :: normalize
     public :: norm
     public :: norm2
-    public :: dot_product
+    public :: rank
     public :: sin
     public :: sin_with_norm
     public :: tan
@@ -216,6 +220,11 @@ module mod_coordinate_cartesian
         module procedure :: normalize_3D_R32
         module procedure :: normalize_3D_R64
     end interface normalize
+
+    interface rank
+        module procedure :: rank_R32
+        module procedure :: rank_R64
+    end interface rank
 
     interface sin
         module procedure :: sin_without_norm_2D_R32
@@ -785,6 +794,48 @@ module mod_coordinate_cartesian
         coordinate_prod%z = scalar_left * coordinate_right%z
 
     end function prod_sclr_3D_R64
+
+
+
+    pure function rank_R32 (coordinate) result(rank)
+
+        ! arguments for this <function>
+        class(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
+
+        ! return value of this <function>
+        integer(INT8) :: rank
+
+        select type(coordinate)
+            type is(typ_coordinate_cartesian_2D_R32); rank = 2_INT8; return
+            type is(typ_coordinate_cartesian_3D_R32); rank = 3_INT8; return
+        end select
+
+        rank = 0_INT8
+
+        return
+
+    end function rank_R32
+
+
+
+    pure function rank_R64 (coordinate) result(rank)
+
+        ! arguments for this <function>
+        class(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+
+        ! return value of this <function>
+        integer(INT8) :: rank
+
+        select type(coordinate)
+            type is(typ_coordinate_cartesian_2D_R64); rank = 2_INT8; return
+            type is(typ_coordinate_cartesian_3D_R64); rank = 3_INT8; return
+        end select
+
+        rank = 0_INT8
+
+        return
+
+    end function rank_R64
 
 
 
