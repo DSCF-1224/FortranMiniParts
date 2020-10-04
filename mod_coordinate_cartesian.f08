@@ -87,6 +87,12 @@ module mod_coordinate_cartesian
     private :: tan_2D_R32
     private :: tan_2D_R64
 
+    ! kind: subroutine
+    private :: random_number_2D_R32
+    private :: random_number_2D_R64
+    private :: random_number_3D_R32
+    private :: random_number_3D_R64
+
     ! kind: interface: operator
     public :: operator(+)
     public :: operator(-)
@@ -103,6 +109,9 @@ module mod_coordinate_cartesian
     public :: sin
     public :: sin_with_norm
     public :: tan
+
+    ! kind: interface: subroutine
+    public :: random_number
 
 
 
@@ -222,6 +231,13 @@ module mod_coordinate_cartesian
         module procedure :: tan_2D_R32
         module procedure :: tan_2D_R64
     end interface tan
+
+    interface random_number
+        module procedure :: random_number_2D_R32
+        module procedure :: random_number_2D_R64
+        module procedure :: random_number_3D_R32
+        module procedure :: random_number_3D_R64
+    end interface random_number
 
 
 
@@ -911,6 +927,56 @@ module mod_coordinate_cartesian
         tan = coordinate%y / coordinate%x
 
     end function tan_2D_R64
+
+
+
+    subroutine random_number_2D_R32 (coordinate)
+
+        ! arguments for this <subroutine>
+        type(typ_coordinate_cartesian_2D_R32), intent(out) :: coordinate
+
+        call random_number( coordinate%x )
+        call random_number( coordinate%y )
+
+    end subroutine random_number_2D_R32
+
+
+
+    subroutine random_number_2D_R64 (coordinate)
+
+        ! arguments for this <subroutine>
+        type(typ_coordinate_cartesian_2D_R64), intent(out) :: coordinate
+
+        call random_number( coordinate%x )
+        call random_number( coordinate%y )
+
+    end subroutine random_number_2D_R64
+
+
+
+    subroutine random_number_3D_R32 (coordinate)
+
+        ! arguments for this <subroutine>
+        type(typ_coordinate_cartesian_3D_R32), intent(out) :: coordinate
+
+        call random_number( coordinate%x )
+        call random_number( coordinate%y )
+        call random_number( coordinate%z )
+
+    end subroutine random_number_3D_R32
+
+
+
+    subroutine random_number_3D_R64 (coordinate)
+
+        ! arguments for this <subroutine>
+        type(typ_coordinate_cartesian_3D_R64), intent(out) :: coordinate
+
+        call random_number( coordinate%x )
+        call random_number( coordinate%y )
+        call random_number( coordinate%z )
+
+    end subroutine random_number_3D_R64
 
 end module mod_coordinate_cartesian
 
