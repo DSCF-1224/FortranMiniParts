@@ -19,6 +19,9 @@ module mod_support_allocate
 
     ! accessibility of the <subroutine>s and <function>s in this <module>
 
+    ! kind: function
+    public :: validity_allocation
+
     ! kind: subroutine
     public :: CheckStatAllocate
 
@@ -29,13 +32,27 @@ module mod_support_allocate
 
 
 
+    pure function validity_allocation (stat) result(validity)
+
+        ! arguments for this <function>
+        integer(INT32), intent(in) :: stat
+
+        ! return value of this <function>
+        logical :: validity
+
+        validity = stat .eq. 0_INT32
+
+    end function validity_allocation
+
+
+
     subroutine CheckStatAllocate (stat, allowStop)
 
         ! arguments for this <subroutine>
         integer(INT32), intent(in) :: stat
         logical,        intent(in) :: allowStop
 
-        if (stat /= 0_INT32) then
+        if ( .not. validity_allocation(stat) ) then
 
             write(unit=ERROR_UNIT, fmt='(A)') 'An allocating error was detected.'
 

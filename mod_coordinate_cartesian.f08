@@ -8,7 +8,8 @@
 module mod_coordinate_cartesian
 
     ! <module>s to import
-    use, intrinsic :: iso_fortran_env
+    use,     intrinsic :: iso_fortran_env
+    use, non_intrinsic :: mod_inv
 
 
 
@@ -37,10 +38,20 @@ module mod_coordinate_cartesian
     private :: cos_without_norm_2D_R32
     private :: cos_without_norm_2D_R64
 
+    private :: divide_2D_R32
+    private :: divide_2D_R64
+    private :: divide_3D_R32
+    private :: divide_3D_R64
+
     private :: dot_product_2D_R32
     private :: dot_product_2D_R64
     private :: dot_product_3D_R32
     private :: dot_product_3D_R64
+
+    private :: normalize_2D_R32
+    private :: normalize_2D_R64
+    private :: normalize_3D_R32
+    private :: normalize_3D_R64
 
     private :: norm_R32
     private :: norm_R64
@@ -80,10 +91,12 @@ module mod_coordinate_cartesian
     public :: operator(+)
     public :: operator(-)
     public :: operator(*)
+    public :: operator(/)
 
     ! kind: interface: function
     public :: cos
     public :: cos_with_norm
+    public :: normalize
     public :: norm
     public :: norm2
     public :: dot_product
@@ -154,6 +167,13 @@ module mod_coordinate_cartesian
         module procedure :: prod_sclr_3D_R64
     end interface operator(*)
 
+    interface operator(/)
+        module procedure :: divide_2D_R32
+        module procedure :: divide_2D_R64
+        module procedure :: divide_3D_R32
+        module procedure :: divide_3D_R64
+    end interface operator(/)
+
     interface cos
         module procedure :: cos_without_norm_2D_R32
         module procedure :: cos_without_norm_2D_R64
@@ -180,6 +200,13 @@ module mod_coordinate_cartesian
         module procedure :: norm2_R32
         module procedure :: norm2_R64
     end interface norm2
+
+    interface normalize
+        module procedure :: normalize_2D_R32
+        module procedure :: normalize_2D_R64
+        module procedure :: normalize_3D_R32
+        module procedure :: normalize_3D_R64
+    end interface normalize
 
     interface sin
         module procedure :: sin_without_norm_2D_R32
@@ -320,6 +347,66 @@ module mod_coordinate_cartesian
         cos = cos_with_norm( coordinate= coordinate, norm= norm(coordinate) )
 
     end function cos_without_norm_2D_R64
+
+
+
+    pure function divide_2D_R32 (coordinate_left, scalar_right) result(coordinate_divided)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate_left
+        real(REAL32),                          intent(in) :: scalar_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_2D_R32) :: coordinate_divided
+
+        coordinate_divided = coordinate_left * inv( scalar_right )
+
+    end function divide_2D_R32
+
+
+
+    pure function divide_2D_R64 (coordinate_left, scalar_right) result(coordinate_divided)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate_left
+        real(REAL64),                          intent(in) :: scalar_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_2D_R64) :: coordinate_divided
+
+        coordinate_divided = coordinate_left * inv( scalar_right )
+
+    end function divide_2D_R64
+
+
+
+    pure function divide_3D_R32 (coordinate_left, scalar_right) result(coordinate_divided)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_3D_R32), intent(in) :: coordinate_left
+        real(REAL32),                          intent(in) :: scalar_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_3D_R32) :: coordinate_divided
+
+        coordinate_divided = coordinate_left * inv( scalar_right )
+
+    end function divide_3D_R32
+
+
+
+    pure function divide_3D_R64 (coordinate_left, scalar_right) result(coordinate_divided)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_3D_R64), intent(in) :: coordinate_left
+        real(REAL64),                          intent(in) :: scalar_right
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_3D_R64) :: coordinate_divided
+
+        coordinate_divided = coordinate_left * inv( scalar_right )
+
+    end function divide_3D_R64
 
 
 
@@ -494,6 +581,62 @@ module mod_coordinate_cartesian
         norm2 = dot_product(coordinate, coordinate)
 
     end function norm2_R64
+
+
+
+    pure function normalize_2D_R32 (coordinate) result(coordinate_normalized)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_2D_R32) :: coordinate_normalized
+
+        coordinate_normalized = coordinate / norm(coordinate)
+
+    end function normalize_2D_R32
+
+
+
+    pure function normalize_2D_R64 (coordinate) result(coordinate_normalized)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_2D_R64) :: coordinate_normalized
+
+        coordinate_normalized = coordinate / norm(coordinate)
+
+    end function normalize_2D_R64
+
+
+
+    pure function normalize_3D_R32 (coordinate) result(coordinate_normalized)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_3D_R32), intent(in) :: coordinate
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_3D_R32) :: coordinate_normalized
+
+        coordinate_normalized = coordinate / norm(coordinate)
+
+    end function normalize_3D_R32
+
+
+
+    pure function normalize_3D_R64 (coordinate) result(coordinate_normalized)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_3D_R64), intent(in) :: coordinate
+
+        ! return value of this <function>
+        type(typ_coordinate_cartesian_3D_R64) :: coordinate_normalized
+
+        coordinate_normalized = coordinate / norm(coordinate)
+
+    end function normalize_3D_R64
 
 
 
