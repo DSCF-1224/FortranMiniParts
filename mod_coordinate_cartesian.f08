@@ -91,10 +91,18 @@ module mod_coordinate_cartesian
     private :: tan_2D_R64
 
     ! kind: subroutine
+    private :: assign_scalar_2D_R32
+    private :: assign_scalar_2D_R64
+    private :: assign_scalar_3D_R32
+    private :: assign_scalar_3D_R64
+
     private :: random_number_2D_R32
     private :: random_number_2D_R64
     private :: random_number_3D_R32
     private :: random_number_3D_R64
+
+    ! kind: interface: assignment
+    public :: assignment(=)
 
     ! kind: interface: operator
     public :: operator(+)
@@ -143,6 +151,13 @@ module mod_coordinate_cartesian
 
 
     ! <interface>s for this <module>
+    interface assignment(=)
+        module procedure :: assign_scalar_2D_R32
+        module procedure :: assign_scalar_2D_R64
+        module procedure :: assign_scalar_3D_R32
+        module procedure :: assign_scalar_3D_R64
+    end interface assignment(=)
+
     interface operator(+)
 
         ! binary operator
@@ -950,6 +965,68 @@ module mod_coordinate_cartesian
         coordinate_sub = - coordinate_b + coordinate_a
 
     end function sub_3D_R64
+
+
+
+    subroutine assign_scalar_2D_R32 (coordinate, scalar)
+
+        ! arguments for this <subroutine>
+        type(typ_coordinate_cartesian_2D_R32), intent(out) :: coordinate
+        real(REAL32),                          intent(in)  :: scalar
+
+        coordinate%x = scalar
+        coordinate%y = scalar
+
+        return
+
+    end subroutine assign_scalar_2D_R32
+
+
+
+    subroutine assign_scalar_2D_R64 (coordinate, scalar)
+
+        ! arguments for this <subroutine>
+        type(typ_coordinate_cartesian_2D_R64), intent(out) :: coordinate
+        real(REAL64),                          intent(in)  :: scalar
+
+        coordinate%x = scalar
+        coordinate%y = scalar
+
+        return
+
+    end subroutine assign_scalar_2D_R64
+
+
+
+    subroutine assign_scalar_3D_R32 (coordinate, scalar)
+
+        ! arguments for this <subroutine>
+        type(typ_coordinate_cartesian_3D_R32), intent(out) :: coordinate
+        real(REAL32),                          intent(in)  :: scalar
+
+        coordinate%x = scalar
+        coordinate%y = scalar
+        coordinate%z = scalar
+
+        return
+
+    end subroutine assign_scalar_3D_R32
+
+
+
+    subroutine assign_scalar_3D_R64 (coordinate, scalar)
+
+        ! arguments for this <subroutine>
+        type(typ_coordinate_cartesian_3D_R64), intent(out) :: coordinate
+        real(REAL64),                          intent(in)  :: scalar
+
+        coordinate%x = scalar
+        coordinate%y = scalar
+        coordinate%z = scalar
+
+        return
+
+    end subroutine assign_scalar_3D_R64
 
 
 
