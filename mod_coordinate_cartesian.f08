@@ -968,6 +968,34 @@ module mod_coordinate_cartesian
 
 
 
+    pure function tan_2D_R32 (coordinate) result(tan)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL32) :: tan
+
+        tan = coordinate%y / coordinate%x
+
+    end function tan_2D_R32
+
+
+
+    pure function tan_2D_R64 (coordinate) result(tan)
+
+        ! arguments for this <function>
+        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
+
+        ! return value of this <function>
+        real(REAL64) :: tan
+
+        tan = coordinate%y / coordinate%x
+
+    end function tan_2D_R64
+
+
+
     subroutine assign_scalar_2D_R32 (coordinate, scalar)
 
         ! arguments for this <subroutine>
@@ -1027,34 +1055,6 @@ module mod_coordinate_cartesian
         return
 
     end subroutine assign_scalar_3D_R64
-
-
-
-    pure function tan_2D_R32 (coordinate) result(tan)
-
-        ! arguments for this <function>
-        type(typ_coordinate_cartesian_2D_R32), intent(in) :: coordinate
-
-        ! return value of this <function>
-        real(REAL32) :: tan
-
-        tan = coordinate%y / coordinate%x
-
-    end function tan_2D_R32
-
-
-
-    pure function tan_2D_R64 (coordinate) result(tan)
-
-        ! arguments for this <function>
-        type(typ_coordinate_cartesian_2D_R64), intent(in) :: coordinate
-
-        ! return value of this <function>
-        real(REAL64) :: tan
-
-        tan = coordinate%y / coordinate%x
-
-    end function tan_2D_R64
 
 
 

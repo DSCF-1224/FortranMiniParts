@@ -1,4 +1,7 @@
 *.bin
+*.exe
+*.MakeFile
 *.log
 *.mod
 *.o
+test*
