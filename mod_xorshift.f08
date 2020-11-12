@@ -6,6 +6,7 @@
 ! # reference #
 ! https://en.wikipedia.org/wiki/Xorshift
 ! https://ja.wikipedia.org/wiki/Xorshift
+! http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/emt64.html
 ! 
 ! ==================================================================================================================================
 
@@ -17,18 +18,26 @@ module mod_xorshift
     ! require all variables to be explicitly declared
     implicit none
 
+
+
     ! accessibility of the <subroutine>s and <function>s in this <module>
-    
+
     ! kind: subroutine
-    public :: random_seed_xorshift32
-    public :: random_seed_xorshift32_default
-    public :: random_seed_xorshift64
-    public :: random_seed_xorshift64_default
-    public :: random_seed_xorshift128
-    public :: random_seed_xorshift128_default
-    public :: random_number_xorshift32
-    public :: random_number_xorshift64
+    public  :: random_seed_xorshift32
+    public  :: random_seed_xorshift32_default
+    public  :: random_seed_xorshift64
+    public  :: random_seed_xorshift64_default
+    public  :: random_seed_xorshift128
+    public  :: random_seed_xorshift128_default
+    public  :: random_number_xorshift32
+    public  :: random_number_xorshift64
+    private :: random_number_xorshift128_i32
+    private :: random_number_xorshift128_r64
+
+    ! kind: interface
     public :: random_number_xorshift128
+
+
 
     ! <type>s for this <module>
     type, public :: typ_state_xorshift32
@@ -45,6 +54,16 @@ module mod_xorshift
         integer(INT32), private :: z
         integer(INT32), private :: w
     end type typ_state_xorshift128
+
+
+
+    ! <interface>s for this <module>
+    interface random_number_xorshift128
+        module procedure :: random_number_xorshift128_i32
+        module procedure :: random_number_xorshift128_r64
+    end interface random_number_xorshift128
+
+
 
     ! contained <subroutine>s and <function>s are below
     contains
@@ -165,7 +184,7 @@ module mod_xorshift
 
 
 
-    subroutine random_number_xorshift128(state, harvest)
+    subroutine random_number_xorshift128_i32 (state, harvest)
 
         ! arguments for this <subroutine>
         type(typ_state_xorshift128), intent(inout) :: state
@@ -180,7 +199,25 @@ module mod_xorshift
 
         return
 
-    end subroutine random_number_xorshift128
+    end subroutine random_number_xorshift128_i32
+
+
+
+    subroutine random_number_xorshift128_r64 (state, harvest)
+
+        ! arguments for this <subroutine>
+        type(typ_state_xorshift128), intent(inout) :: state
+        real(REAL64),                intent(out)   :: harvest
+
+        ! variables for this <subroutine>
+        integer(INT32) :: harvest_int
+
+        call random_number_xorshift128_i32 (state= state, harvest= harvest_int)
+        harvest = real(harvest_int, kind=REAL64)
+
+        return
+
+    end subroutine random_number_xorshift128_r64
 
 end module mod_xorshift
 
