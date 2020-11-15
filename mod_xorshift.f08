@@ -22,6 +22,10 @@ module mod_xorshift
 
     ! accessibility of the <subroutine>s and <function>s in this <module>
 
+    ! kind: function
+    private :: concatenate2i32
+    private :: ibsetFirst32bit
+
     ! kind: subroutine
     public  :: random_seed_xorshift32
     public  :: random_seed_xorshift32_default
@@ -32,7 +36,7 @@ module mod_xorshift
     public  :: random_number_xorshift32
     public  :: random_number_xorshift64
     private :: random_number_xorshift128_i32
-    private :: random_number_xorshift128_r64
+    private :: random_number_xorshift128_i64
 
     ! kind: interface
     public :: random_number_xorshift128
@@ -60,13 +64,43 @@ module mod_xorshift
     ! <interface>s for this <module>
     interface random_number_xorshift128
         module procedure :: random_number_xorshift128_i32
-        module procedure :: random_number_xorshift128_r64
+        module procedure :: random_number_xorshift128_i64
     end interface random_number_xorshift128
 
 
 
     ! contained <subroutine>s and <function>s are below
     contains
+
+
+
+    pure function concatenate2i32 (front, rear)
+
+        ! arguments for this <function>
+        integer(INT32), intent(in) :: front, rear
+
+        ! return value of this <function>
+        integer(INT64) :: concatenate2i32
+
+        concatenate2i32 = ibsetFirst32bit(front)
+        concatenate2i32 = ishftc(i= concatenate2i32, shift=32_INT32)
+        concatenate2i32 = iand(i= concatenate2i32, j= ibsetFirst32bit(rear))
+
+    end function concatenate2i32
+
+
+
+    pure function ibsetFirst32bit (i)
+
+        ! arguments for this <function>
+        integer(INT32), intent(in) :: i
+
+        ! return value of this <function>
+        integer(INT64) :: ibsetFirst32bit
+
+        ibsetFirst32bit = ior(i= Z'FFFFFFFF00000000', j= i)
+
+    end function ibsetFirst32bit
 
 
 
@@ -203,21 +237,24 @@ module mod_xorshift
 
 
 
-    subroutine random_number_xorshift128_r64 (state, harvest)
+    subroutine random_number_xorshift128_i64 (state, harvest)
 
         ! arguments for this <subroutine>
         type(typ_state_xorshift128), intent(inout) :: state
-        real(REAL64),                intent(out)   :: harvest
+        integer(INT64),              intent(out)   :: harvest
 
         ! variables for this <subroutine>
-        integer(INT32) :: harvest_int
+        integer(INT32) :: harvest_i32_1st
+        integer(INT32) :: harvest_i32_2nd
 
-        call random_number_xorshift128_i32 (state= state, harvest= harvest_int)
-        harvest = real(harvest_int, kind=REAL64)
+        call random_number_xorshift128(state= state, harvest= harvest_i32_1st)
+        call random_number_xorshift128(state= state, harvest= harvest_i32_2nd)
+
+        harvest = concatenate2i32(front= harvest_i32_1st, rear= harvest_i32_2nd)
 
         return
 
-    end subroutine random_number_xorshift128_r64
+    end subroutine random_number_xorshift128_i64
 
 end module mod_xorshift
 
