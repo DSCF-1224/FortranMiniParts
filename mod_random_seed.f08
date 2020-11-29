@@ -8,7 +8,7 @@
 ! 
 ! ==================================================================================================================================
 
-module mod_xorshift
+module mod_random_seed
 
     ! <module>s to import
     use,     intrinsic :: iso_fortran_env
@@ -27,6 +27,7 @@ module mod_xorshift
     ! kind: subroutine
     public  :: random_seed_get
     public  :: random_seed_put
+    public  :: show_seed_console
 
 
 
@@ -45,7 +46,7 @@ module mod_xorshift
 
     subroutine random_seed_get (obj, stat, allowStop)
 
-        ! arguments for this <subroutine>
+        ! argument(s) for this <subroutine>
         type(typ_random_seed), intent(inout) :: obj
         integer,               intent(out)   :: stat
         logical,               intent(in)    :: allowStop
@@ -77,11 +78,11 @@ module mod_xorshift
 
     subroutine random_seed_put (obj, allowStop)
 
-        ! arguments for this <subroutine>
+        ! argument(s) for this <subroutine>
         type(typ_random_seed), intent(in) :: obj
         logical,               intent(in) :: allowStop
 
-        ! variables for this <subroutine>
+        ! variable(s) for this <subroutine>
         logical :: validity
 
         ! STEP.01
@@ -106,7 +107,21 @@ module mod_xorshift
     end subroutine random_seed_put
 
 
-end module mod_xorshift
+
+    subroutine show_seed_console (obj)
+
+        ! argument(s) for this <subroutine>
+        type(typ_random_seed) , intent(in) :: obj
+
+        write(unit= OUTPUT_UNIT, fmt=*) 'size   > ', obj%size
+        write(unit= OUTPUT_UNIT, fmt=*) 'values > ', obj%value(:)
+
+        return
+
+    end subroutine show_seed_console
+
+
+end module mod_random_seed
 
 ! ==================================================================================================================================
 ! EOF
